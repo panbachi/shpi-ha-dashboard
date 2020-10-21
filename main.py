@@ -13,10 +13,10 @@ from gui.core import Navigation
 from core.connectors import HomeAssistant
 from core.platform import Shpi
 
-if os.path.exists('config.yaml'):
-    config_file = 'config.yaml'
-else:
-    config_file = 'config.example.yaml'
+bin_path = os.path.dirname(__file__)
+config_file = os.path.join(bin_path, 'config.yaml')
+if not os.path.exists(config_file):
+    config_file = os.path.join(bin_path, 'config.example.yaml')
 
 with open(config_file, 'r') as stream:
     config = yaml.safe_load(stream)
