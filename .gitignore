@@ -130,3 +130,9 @@ dmypy.json
 
 .idea/
 config.yaml
+
+# Visual Studio
+.vs/
+*.pyproj
+*.pyproj.user
+*.sln
