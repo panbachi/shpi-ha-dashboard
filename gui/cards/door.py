@@ -79,6 +79,8 @@ class Door(BoxLayout):
     def __init__(self, config, **kwargs):
         super(Door, self).__init__(**kwargs)
 
+        self.nav_icon = 'door'
+
         '''
         configure door camera
         '''

@@ -1,9 +1,10 @@
+import sys
+
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.bottomnavigation import MDBottomNavigation, MDBottomNavigationItem
 from kivy.uix.screenmanager import FadeTransition
-from gui.cards import Door, Garbage, Lights, Thermostat, Weather
-
+import gui.cards
 
 class RoomNavigation(MDBottomNavigation):
     def __init__(self, config, **kwargs):
@@ -14,27 +15,10 @@ class RoomNavigation(MDBottomNavigation):
         self.ids.tab_manager.transition.duration = 0.0
 
         for card in config:
-            icon = None
-            content = None
-
-            if card['type'] == 'lights':
-                icon = 'lightbulb'
-                content = Lights(card)
-            elif card['type'] == 'thermostat':
-                icon = 'thermometer'
-                content = Thermostat(card)
-            elif card['type'] == 'garbage':
-                icon = 'delete-empty'
-                content = Garbage(card)
-            elif card['type'] == 'weather':
-                icon = 'weather-partly-cloudy'
-                content = Weather(card)
-            elif card['type'] == 'door':
-                icon = 'door'
-                content = Door(card)
+            content = gui.cards.createCard(card)
 
             if content:
-                item = MDBottomNavigationItem(name=card['name'], text=card['name'], icon=icon)
+                item = MDBottomNavigationItem(name=card['name'], text=card['name'], icon=content.nav_icon)
                 item.add_widget(content)
                 self.add_widget(item)
 

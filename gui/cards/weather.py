@@ -86,6 +86,7 @@ class Weather(FloatLayout):
         self.size = (800, 320)
 
         self.config = config
+        self.nav_icon = "weather-partly-cloudy"
 
         self.cardinal_directions = [
             "N",
