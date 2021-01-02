@@ -14,6 +14,10 @@ class RoomNavigation(MDBottomNavigation):
         self.ids.tab_bar.height = '80dp'
         self.ids.tab_manager.transition.duration = 0.0
 
+        if len(config) <= 1:
+            self.ids.bottom_panel.height = '0dp'
+            self.ids.bottom_panel.opacity = 0
+
         for card in config:
             content = gui.cards.createCard(card)
 
