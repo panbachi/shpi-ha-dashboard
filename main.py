@@ -66,8 +66,8 @@ class MainScreen(FloatLayout):
 class MainApp(MDApp):
     def __init__(self, **kwargs):
         self.register_event_type('on_state_changed')
-        # self.theme_cls.theme_style = "Dark"
-        # self.theme_cls.primary_palette = "Gray"
+        self.load_theme()
+
         super().__init__(**kwargs)
         self.config = config
         self.connectors = {}
@@ -98,6 +98,12 @@ class MainApp(MDApp):
 
     def on_state_changed(self, *args, **kwargs):
         pass
+
+    def load_theme(self):
+        theme_cfg = config.get('theme', {})
+        self.theme_cls.theme_style = theme_cfg.get('style', 'Light')
+        self.theme_cls.primary_palette = theme_cfg.get('primary_palette', 'Blue')
+        self.theme_cls.accent_palette = theme_cfg.get('accent_palette', 'Amber')
 
 
 if __name__ == "__main__":
