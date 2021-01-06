@@ -47,6 +47,12 @@ python3 -m pip install Twisted
 python3 -m pip install autobahn[twisted]
 ```
 
+### Install optional dependencies
+For connecting via SSL
+```
+python3 -m pip install pyOpenSSL
+```
+
 ### Configure Kivy
 Edit file `/home/pi/.kivy/config.ini`
 

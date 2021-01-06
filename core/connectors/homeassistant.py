@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
+import time
 from kivy.support import install_twisted_reactor
 
 install_twisted_reactor()
 from autobahn.twisted.websocket import WebSocketClientProtocol, \
-    WebSocketClientFactory
+    WebSocketClientFactory, \
+    connectWS
 from twisted.internet import reactor
 
 
@@ -43,7 +45,8 @@ class HAClientFactory(WebSocketClientFactory):
     protocol = HAClientProtocol
 
     def __init__(self, config, handler):
-        url = 'ws://' + config['host'] + ':' + str(config['port']) + '/api/websocket'
+        use_ssl = config.get('use_ssl', False)
+        url = ('wss://' if use_ssl else 'ws://') + config['host'] + ':' + str(config['port']) + '/api/websocket'
         WebSocketClientFactory.__init__(self, url)
 
         self.handler = handler
@@ -61,7 +64,12 @@ class HomeAssistant:
 
     def connect_to_server(self):
         self._factory = HAClientFactory(self.config, self)
-        reactor.connectTCP(self.config['host'], self.config['port'], self._factory)
+        ctxFactory = None
+        if self._factory.isSecure:
+            from twisted.internet import ssl
+            ctxFactory = ssl.ClientContextFactory()
+
+        connectWS(self._factory, ctxFactory)
 
     def send_message(self, msg):
         proto = self._factory._proto
