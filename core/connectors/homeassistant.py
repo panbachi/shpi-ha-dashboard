@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
+import time
 from kivy.support import install_twisted_reactor
 
 install_twisted_reactor()
 from autobahn.twisted.websocket import WebSocketClientProtocol, \
     WebSocketClientFactory
+from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet import reactor
 
 
@@ -38,8 +40,7 @@ class HAClientProtocol(WebSocketClientProtocol):
         self.factory.handler.print_message("WebSocket connection closed: {0}".format(reason))
         self.factory._proto = None
 
-
-class HAClientFactory(WebSocketClientFactory):
+class HAClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
     protocol = HAClientProtocol
 
     def __init__(self, config, handler):
@@ -50,6 +51,15 @@ class HAClientFactory(WebSocketClientFactory):
         # Not sure why/whether _proto is needed?
         self._proto = None
         self.protocol.config = config
+
+    def clientConnectionFailed(self, connector, reason):
+        self.handler.print_message("WebSocket connection failed. Retrying in 5 seconds")
+        time.sleep(5)
+        self.retry(connector)
+
+    def clientConnectionLost(self, connector, reason):
+        self.handler.print_message("WebSocket connection lost. Reconnecting")
+        self.retry(connector)
 
 
 class HomeAssistant:
