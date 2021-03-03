@@ -1,5 +1,6 @@
 import os
 import yaml
+import locale
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -12,15 +13,6 @@ from gui.core import Navigation
 
 from core.connectors import HomeAssistant
 from core.platform import Shpi
-
-bin_path = os.path.dirname(__file__)
-config_file = os.path.join(bin_path, 'config.yaml')
-if not os.path.exists(config_file):
-    config_file = os.path.join(bin_path, 'config.example.yaml')
-
-with open(config_file, 'r') as stream:
-    config = yaml.safe_load(stream)
-
 
 class MainScreen(FloatLayout):
     def __init__(self, config, **kwargs):
@@ -105,6 +97,22 @@ class MainApp(MDApp):
         self.theme_cls.primary_palette = theme_cfg.get('primary_palette', 'Blue')
         self.theme_cls.accent_palette = theme_cfg.get('accent_palette', 'Amber')
 
+def load_config():
+    bin_path = os.path.dirname(__file__)
+    config_file = os.path.join(bin_path, 'config.yaml')
+    if not os.path.exists(config_file):
+        config_file = os.path.join(bin_path, 'config.example.yaml')
+
+    with open(config_file, 'r') as stream:
+        config = yaml.safe_load(stream)
+
+    return config
 
 if __name__ == "__main__":
+    global config
+    config = load_config()
+
+    # Use system defined locale
+    locale.setlocale(locale.LC_ALL, '')
+
     MainApp().run()
