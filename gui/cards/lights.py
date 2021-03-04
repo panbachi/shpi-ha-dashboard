@@ -90,6 +90,8 @@ class Lights(ScrollView):
     def __init__(self, config, **kwargs):
         super(Lights, self).__init__(**kwargs)
 
+        self.nav_icon = 'lightbulb'
+
         '''
         configure list
         '''

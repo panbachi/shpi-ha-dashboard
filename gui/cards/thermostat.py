@@ -132,6 +132,7 @@ class Thermostat(FloatLayout):
         '''
         self.config = config
         self.current_set = 0
+        self.nav_icon = 'thermometer'
 
         '''
         configure temp plus button

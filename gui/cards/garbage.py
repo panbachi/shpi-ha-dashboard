@@ -55,6 +55,7 @@ class Garbage(ScrollView):
         configure Garbage properties
         '''
         self.config = config
+        self.nav_icon = 'delete-empty'
 
         self.blue = ''
         self.yellow = ''

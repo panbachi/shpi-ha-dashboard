@@ -24,5 +24,8 @@ class Navigation(MDTabs):
 
         self.rooms = config
 
+        if len(self.rooms) <= 1:
+            self.tab_bar_height = "0dp"
+
         for room in self.rooms:
             self.add_widget(NavigationItem(room))

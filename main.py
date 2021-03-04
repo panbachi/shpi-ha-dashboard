@@ -1,5 +1,6 @@
 import os
 import yaml
+import locale
 
 from kivy.app import App
 from kivy.clock import Clock
@@ -12,15 +13,6 @@ from gui.core import Navigation
 
 from core.connectors import HomeAssistant
 from core.platform import Shpi
-
-if os.path.exists('config.yaml'):
-    config_file = 'config.yaml'
-else:
-    config_file = 'config.example.yaml'
-
-with open(config_file, 'r') as stream:
-    config = yaml.safe_load(stream)
-
 
 class MainScreen(FloatLayout):
     def __init__(self, config, **kwargs):
@@ -66,8 +58,8 @@ class MainScreen(FloatLayout):
 class MainApp(MDApp):
     def __init__(self, **kwargs):
         self.register_event_type('on_state_changed')
-        # self.theme_cls.theme_style = "Dark"
-        # self.theme_cls.primary_palette = "Gray"
+        self.load_theme()
+
         super().__init__(**kwargs)
         self.config = config
         self.connectors = {}
@@ -99,6 +91,28 @@ class MainApp(MDApp):
     def on_state_changed(self, *args, **kwargs):
         pass
 
+    def load_theme(self):
+        theme_cfg = config.get('theme', {})
+        self.theme_cls.theme_style = theme_cfg.get('style', 'Light')
+        self.theme_cls.primary_palette = theme_cfg.get('primary_palette', 'Blue')
+        self.theme_cls.accent_palette = theme_cfg.get('accent_palette', 'Amber')
+
+def load_config():
+    bin_path = os.path.dirname(__file__)
+    config_file = os.path.join(bin_path, 'config.yaml')
+    if not os.path.exists(config_file):
+        config_file = os.path.join(bin_path, 'config.example.yaml')
+
+    with open(config_file, 'r') as stream:
+        config = yaml.safe_load(stream)
+
+    return config
 
 if __name__ == "__main__":
+    global config
+    config = load_config()
+
+    # Use system defined locale
+    locale.setlocale(locale.LC_ALL, '')
+
     MainApp().run()
